@@ -167,8 +167,9 @@ function solve(amg::AMGSolver, b::Vector; kwargs...)
    for (n, (key, rj)) in enumerate(kwargs)
       if key == :residuals
          rp = PyVector(Float64[])
-         kwargs[n] = (:residuals, rp)
-         x = amg.po[:solve](b; amg.kwargs..., kwargs...)
+         kw = collect(kwargs)
+         kw[n] = Pair(:residuals, rp)
+         x = amg.po[:solve](b; amg.kwargs..., kw...)
          append!(rj, collect(rp))
          return x::Vector{Float64}
       end
